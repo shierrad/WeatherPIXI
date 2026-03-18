@@ -1,26 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UFT-8">
+    <meta charset="UTF-8">
     <title> Weather </title>
-    <script src = "https://pixijs.download/release/pixi.min.js"></script>
     <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
+  <script>
+    const current = <%- JSON.stringify(current) %>;
+    const forecast = <%- JSON.stringify(forecast) %>;
+  </script>
   <div id="bg-container"></div>
   <div id="app-container">
-        <div class="response-area">
-            <p><%= content %></p>
+     <div id="top-container">
+        <div id="response-area">
+          <% if (forecast) { %>
+                <div class="description-location">
+                <img id="large-icon" src = <%= "/images/"+current.currIcon + ".png" %> 
+                <p> <%= current.currWea + " in " + current.place %> </p>
+                </div>
+                <div class="current-temperatures">
+                  <p> <%= current.currTemp + "°C, feels like " + current.currFeels + "°C"%> </p>  
+                </div>
+            <% }  else { %>
+                <p> <%= current %> </p>
+            <% } %>
         </div>
         <form id="myForm" method="post">
-            <label for="cityInput">City:</label>
-            <input type="text" id="cityInput" name="city" >
-            <input id="post" type="submit" value="POST" formaction="/weather">
+            <input type="text" id="cityInput" name="city" placeholder="Enter city name, example: Lisbon">
+            <input id="post" type="submit" value="get weather" formaction="/weather">
         </form>
     </div>
-        <div id="front-container"> </div>
-<script src="/index.js"></script>
+    <% if (forecast) { %>
+    <div class = "bottom-container">
+    <div class = "bottom-header"><p>5-day forecast</p></div>
+    <div class = "week-container">
+    <% for (let d = 0; d < forecast.date.length ; d++) { %>
+        <div class="day-container">
+          <div class="top-date-header">
+            <%= forecast.date[d].day %>/<%= forecast.date[d].month %> 
+               </div> 
+                <% for (let h = 0; h < 8 ; h++ ) { %>
+                    <% let wD =  forecast.forecasts[d].weather[h]; %>
+                    <% let hStyle = (wD != "") ? "" : "-no-info" %> 
+                    <div class="<%= "hourly" + hStyle %>"  title = "<%= wD %>" >
+                        <div class="hour-container">
+                         <% let hour = forecast.forecasts[d].hour[h]; %>
+                         <% if (hour < 10) { %>
+                            <% hour = "0" + hour ; %>
+                         <% } %>
+                         <%= hour + ":00" %> 
+                        </div>
+                        <% if (forecast.forecasts[d].icon[h] != ""){ %>
+                        <div class="icon-container">
+                          <img src=<%= "/images/"+forecast.forecasts[d].icon[h] + ".png" %> >
+                        </div>
+                        <% } %>
+                        <% let temp = forecast.forecasts[d].temp[h] %>
+                        <% if (temp != "") { %>
+                        <div class="temp-container">  
+                            <%= temp + "°C" %>
+                        </div>
+                        <% } %>
+                    </div>
+                <% } %>
+        </div>
+    <% } %>
+    </div>
+    </div>
+    <% } %>
+    </div>
+    <div id="front-container"> </div>
+<script src="/pixi.min.js"></script>
+<script type="module" src="/index.js"></script>
 </body>
 
 </html>

@@ -2,3 +2,7 @@
 package-lock.json
 userData.json
 node_modules/
+.gitignore
+.env
+.DS_Store
+public/fonts/Parkinsans/
