@@ -1,7 +1,7 @@
 import express from "express";
 import axios from "axios";
 import bodyParser from "body-parser";
-import session from 'express-session';
+//import session from 'express-session';
 import dotenv from "dotenv";
 import {getCurrentInfo, getDateInfo, getForecastData} from "./weatherUtils.js";
 
@@ -35,11 +35,11 @@ const WEA_API_URL = "https://api.openweathermap.org/data/" + API_VERSION;
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: true}));
 
-app.use(session({
-    secret: 'super-secret-key',
-    resave: false,
-    saveUninitialized: true
-}));
+//app.use(session({
+//    secret: 'super-secret-key',
+//    resave: false,
+//    saveUninitialized: true
+//}));
 
 
 let lastCallTime = 0;
@@ -60,18 +60,18 @@ app.use("/weather", (req, res, next) => {
 
 
 app.get("/", (req, res) => {
-    if (!req.session.current){
-        req.session.current = false;
-    }
+    //if (!req.session.current){
+    //    req.session.current = false;
+    //}
     res.render("index.ejs", {current: `Get the weather for your city!`,
-                             forecast: req.session.current});
+                             forecast: false});
 });
 
 
 app.post("/weather", async (req, res) =>{
-    if (!req.session.state){
-        req.session.state = {x: 100};
-    }
+    //if (!req.session.state){
+    //    req.session.state = {x: 100};
+    //}
     const city = req.body.city;
     if (city.length < 1) {
         res.render("index.ejs", {current: `Get the weather for your city!`,
